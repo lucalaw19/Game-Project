@@ -6,6 +6,10 @@ let timer = 0
 let me;
 let died = false;
 
+function preload() {
+  soundFormats('mp3', 'ogg');
+  mySound = loadSound('oof.mp3');
+}
 
 function setup() {
   createCanvas(500, 400);
@@ -24,7 +28,8 @@ function draw(){
   Gametimer();
 
   if (frameCount % 25 == 0) {
-      let  b = new Ball(width, random(0,height), -3);
+      // let randomColor = color(random(255),random(255),random(255));
+      let  b = new Ball(width, random(0,height), -3, color(random(255),random(255),random(255)));
       balls.push(b);
       //console.log(balls); //print the balls array to the console
     }
@@ -41,6 +46,29 @@ function draw(){
 
 }
 
+function Gametimer() {
+  
+  noStroke();
+  fill("red");
+  textAlign(0, 10);
+  textSize(30);
+  text(timer, 450, 50);
+
+  // while (timer > 0) {  // this doesn't work because it's all happening at the same time
+  //   timer --;
+  // }
+
+  // frameCount --> this keeps track of the number of times the program has gone throught the code, 60 = 1 second
+  // % ---> this is the Modulo operator, it divides numbers and evaluates to the remainder: 17 % 5 evaluates to 2 remainder
+  // this can be used to determine if the number on the left is divisible by the number on the right
+  if (died == false){
+    if (frameCount % 60 == 0 && timer >= 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+      timer ++;
+  }
+  
+  }
+}
+
 //avatar class
 class Avatar {
 
@@ -55,7 +83,7 @@ class Avatar {
         strokeWeight(3);
     		fill(201, 234, 242);
 		    ellipse(this.x,this.y,20,20);
-        line(this.x,this.y, this.x, this.y+40);
+        line(this.x,this.y+10, this.x, this.y+40);
         line(this.x, this.y+40, this.x-20, this.y+60);
         line(this.x, this.y+40, this.x+10, this.y+50);
         line(this.x+10, this.y+50, this.x+5, this.y+60);
@@ -74,13 +102,13 @@ class Avatar {
 	}
 
   die(){
-    if (hitcount == 3) {
+    if (hitcount == 6) {
       print("die");
       died = true
       textSize(32);
       fill("red")
       noStroke();
-      text('You Died :(',10,30);
+      text('You Died :(',10,47);
       fill(220);
       rect(me.x-25, me.y-15, 90, 200)
 
@@ -95,18 +123,19 @@ class Avatar {
 class Ball {
 
 	//every ball needs an x value, a y value, and a speed
-	constructor(x,y, speed){
+	constructor(x,y, speed, ballColor){
 		this.x = x;
     this.y = y;
     this.speed = speed;
+    this.ballColor = ballColor;
+
 	}
 
 	// draw a ball on the screen at x,y
 	drawBall(){
     	stroke(0);
       strokeWeight(1);
-      let randomColor = color(random(255),random(255),random(255));
-    	fill(randomColor);
+    	fill(color(this.ballColor));
 		  ellipse(this.x,this.y,10,10);
 	}
 
@@ -119,30 +148,12 @@ class Ball {
 	//if the ball hits the person, change the speed value to negative (send it in the opposite direction)
   	bounceBall(){
     		if (this.x >= me.x-15 && this.x <= me.x+15 && this.y > me.y-40 && this.y < me.y+40){
-      			this.speed = -this.speed;
+            this.speed = -this.speed;
+            mySound.setVolume(0.1);
+            mySound.play();
             hitcount = hitcount +1
     		}
   	}
 
 }
 
-function Gametimer() {
-
-  textAlign(490, 10);
-  textSize(30);
-  text(timer, width/2, height/2);
-
-  // while (timer > 0) {  // this doesn't work because it's all happening at the same time
-  //   timer --;
-  // }
-
-  // frameCount --> this keeps track of the number of times the program has gone throught the code, 60 = 1 second
-  // % ---> this is the Modulo operator, it divides numbers and evaluates to the remainder: 17 % 5 evaluates to 2 remainder
-  // this can be used to determine if the number on the left is divisible by the number on the right
-
-  if (frameCount % 60 == 0 && timer >= 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
-    timer ++;
-  }
-
-
-}
