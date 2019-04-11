@@ -10,7 +10,9 @@ function preload() {
 //
 //   //create an animation from a sequence of numbered images
 //   //pass the first and the last file name and it will try to find the ones in between
-  ghost = loadAnimation('assets/ghost_standing0001.png', 'assets/ghost_standing0007.png');
+  ghost = loadAnimation('sprite/sprite01.png','sprite/sprite07.png');
+
+
 
 }
 
@@ -23,6 +25,6 @@ function draw() {
 
   //specify the animation instance and its x,y position
   //animation() will update the animation frame as well
-  animation(ghost, 300, 150);
+  animation(ghost, 450, 275);
 
 }
